@@ -1,5 +1,10 @@
+// ❌ DO NOT include "use client" here
+
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
+import Header from "@/components/custom/header";
+import { MessagesContext } from "@/context/MessagesContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,12 +22,24 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const messages = [];
+
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <MessagesContext.Provider value={{ messages }}>
+            <Header />
+            {children}
+          </MessagesContext.Provider>
+        </ThemeProvider>
       </body>
     </html>
   );
